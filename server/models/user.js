@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
-const crypto = require('crypto')
-
 //user schema
+const crypto = require('crypto')
+// import CryptoES from 'crypto-es';
 const userSchema = new mongoose.Schema({
     name:{
         type: String,
