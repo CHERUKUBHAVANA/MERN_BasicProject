@@ -32,7 +32,6 @@ const Activate = ({match}) => {
             data: { token }
         })
             .then(response => {
-                console.log('SIGNUP SUCCESS', response)
                 setValues({ ...values, buttonText: 'Submitted' })
                 toast.success(response.data.message)
             })
