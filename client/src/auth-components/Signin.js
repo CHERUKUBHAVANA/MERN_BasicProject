@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import Layout from "../core/Layout";
 import axios from 'axios'
-import {Navigate} from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
 import { authenticate, isAuth } from "./helpers";
-const Signin = () => {
+import withRouter from "../core/WithRouter";
+
+const Signin = ({router}) => {
+    const {navigate} = router
     const [values, setValues] = useState({
         email: "",
         password: "",
@@ -30,9 +33,13 @@ const Signin = () => {
                 //save the response {user, token} in localStorage/ cookie
                 authenticate(response, () => {
                     setValues({ ...values, email: '', password: '', buttonText: 'Submitted' })
-                    let userName = response.data.user.name;
-                    userName = userName.charAt(0).toUpperCase() + userName.slice(1)
-                    toast.success(`Hey ${userName}, Welcome back!`)
+                    // let userName = response.data.user.name;
+                    // userName = userName.charAt(0).toUpperCase() + userName.slice(1)
+                    if (isAuth() && isAuth().role === "admin") {
+                        navigate('/admin')
+                    } else {
+                        navigate('/private')
+                    }
                 })
             })
             .catch(error => {
@@ -63,11 +70,11 @@ const Signin = () => {
         <Layout>
             <div className="col-md-6 offset-md-3">
                 <ToastContainer />
-                {isAuth() ? <Navigate to="/"/> : null}
+                {isAuth() ? <Navigate to="/" /> : null}
                 <h1 className="p-5 text-center">Signin</h1>
                 {signinForm()}
             </div>
         </Layout>
     )
 }
-export default Signin;
+export default withRouter(Signin);

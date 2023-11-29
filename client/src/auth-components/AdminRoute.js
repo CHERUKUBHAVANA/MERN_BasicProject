@@ -2,11 +2,11 @@ import React from 'react'
 import { Navigate } from 'react-router-dom'
 import { isAuth } from './helpers'
 
-const PrivateRoute = ({ children }) => {
+const AdminRoute = ({ children }) => {
     
-    if (!isAuth()) {
+    if (!isAuth() || isAuth().role!=="admin") {
         return <Navigate to="/signin" />
     }
     return children;
 }
-export default PrivateRoute
+export default AdminRoute

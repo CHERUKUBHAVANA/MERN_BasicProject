@@ -21,7 +21,7 @@ const Activate = () => {
         if(token){
             setValues({...values, name, token})
         }
-    }, [token])
+    }, [token, values])
 
     const clickSubmit = (event) => {
         event.preventDefault()
