@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import withRouter from './WithRouter'
 import { isAuth } from '../auth-components/helpers'
 import { signout } from '../auth-components/helpers'
-import { ToastContainer, toast } from 'react-toastify'
 
 const Layout = ({ children, router }) => {
     const { location, navigate } = router
