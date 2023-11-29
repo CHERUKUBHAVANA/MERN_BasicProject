@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Link, Redirect } from "react-router-dom"
 import Layout from "../core/Layout";
 import axios from 'axios'
+import {Navigate} from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
-
+import { authenticate, isAuth } from "./helpers";
 const Signin = () => {
     const [values, setValues] = useState({
         email: "",
@@ -12,30 +12,34 @@ const Signin = () => {
         buttonText: "Submit"
     })
 
-    const {email, password, buttonText } = values
+    const { email, password, buttonText } = values
 
     const handleChange = (name) => (event) => {
-        setValues({...values, [name]: event.target.value})
+        setValues({ ...values, [name]: event.target.value })
     }
 
     const clickSubmit = (event) => {
         event.preventDefault()
-        setValues({...values, buttonText: 'Submitting'})
+        setValues({ ...values, buttonText: 'Submitting' })
         axios({
             method: 'POST',
             url: `${process.env.REACT_APP_API}/signin`,
-            data: {email, password}
+            data: { email, password }
         })
-        .then(response => {
-            //save the response {user, token} in localStorage/ cookie
-            setValues({...values, email:'', password:'', buttonText: 'Submitted'})
-            toast.success(`Hey ${response.data.user.name}, Welcome back!`)   
-        })
-        .catch(error =>{
-            console.log('SIGNUP ERROR', error.response.data)
-            setValues({...values, buttonText:'Submit'})
-            toast.error(error.response.data.error)
-        })
+            .then(response => {
+                //save the response {user, token} in localStorage/ cookie
+                authenticate(response, () => {
+                    setValues({ ...values, email: '', password: '', buttonText: 'Submitted' })
+                    let userName = response.data.user.name;
+                    userName = userName.charAt(0).toUpperCase() + userName.slice(1)
+                    toast.success(`Hey ${userName}, Welcome back!`)
+                })
+            })
+            .catch(error => {
+                console.log('SIGNUP ERROR', error.response.data)
+                setValues({ ...values, buttonText: 'Submit' })
+                toast.error(error.response.data.error)
+            })
     }
 
     const signinForm = () => {
@@ -59,6 +63,7 @@ const Signin = () => {
         <Layout>
             <div className="col-md-6 offset-md-3">
                 <ToastContainer />
+                {isAuth() ? <Navigate to="/"/> : null}
                 <h1 className="p-5 text-center">Signin</h1>
                 {signinForm()}
             </div>
