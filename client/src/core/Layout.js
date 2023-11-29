@@ -2,7 +2,7 @@ import React, {Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import withRouter from './WithRouter'
 const Layout = ({children, router}) =>{
-    const {location, navigate, params} = router
+    const {location} = router
 
     const pathname = location.pathname
 
