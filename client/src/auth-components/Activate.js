@@ -1,52 +1,50 @@
 import React, { useState, useEffect } from "react";
-import { Link, Redirect } from "react-router-dom"
+import { useParams } from "react-router-dom";
 import Layout from "../core/Layout";
 import axios from 'axios'
-import jwt from 'jsonwebtoken'
 import { ToastContainer, toast } from 'react-toastify'
+import {jwtDecode} from 'jwt-decode'
 import 'react-toastify/dist/ReactToastify.min.css'
 
-const Activate = ({match}) => {
+const Activate = () => {
+    const {token} = useParams()
     const [values, setValues] = useState({
         name: "",
-        token: "",
+        token: '',
         show: true
     })
 
+    const { name } = values
     useEffect(() => {
-          let token = match.params.token
-          let {name} = jwt.decode(token)
-          if(token){
-            setValues({...values, name: name, token})
-          }
-    }, [])
-
-    const {name, token, show } = values
+        let {name} = jwtDecode(token)
+        console.log(name)
+        if(token){
+            setValues({...values, name, token})
+        }
+    }, [token])
 
     const clickSubmit = (event) => {
         event.preventDefault()
         setValues({ ...values, buttonText: 'Submitting' })
         axios({
             method: 'POST',
-            url: `${process.env.REACT_APP_API}/signup`,
+            url: `${process.env.REACT_APP_API}/account-activation`,
             data: { token }
         })
             .then(response => {
-                setValues({ ...values, buttonText: 'Submitted' })
+                setValues({ ...values, show:false })
                 toast.success(response.data.message)
             })
             .catch(error => {
-                console.log('SIGNUP ERROR', error.response.data)
-                setValues({ ...values, buttonText: 'Submit' })
                 toast.error(error.response.data.error)
             })
     }
 
     const activationLink = () => {
         return (
-            <div>
-                <h1 className="p-5 text-center">Hey {name}, Ready to activate your account? </h1>
-                <button className="btn btn-outline-primary" onClick={clickSubmit} > Activate Account </button>
+            <div className="text-center">
+                <h1 className="p-5">Hey {name}, Ready to activate your account?</h1>
+                <button className="btn btn-outline-primary" onClick={clickSubmit}>Activate Account</button>
             </div>
         )
     }
@@ -61,3 +59,4 @@ const Activate = ({match}) => {
     )
 }
 export default Activate;
+
