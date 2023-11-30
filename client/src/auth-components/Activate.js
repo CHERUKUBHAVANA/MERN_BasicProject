@@ -17,7 +17,6 @@ const Activate = () => {
     const { name } = values
     useEffect(() => {
         let {name} = jwtDecode(token)
-        console.log(name)
         if(token){
             setValues({...values, name, token})
         }

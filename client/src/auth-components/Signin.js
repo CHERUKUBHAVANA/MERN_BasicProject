@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Layout from "../core/Layout";
 import axios from 'axios'
-import { Navigate } from 'react-router-dom'
+import { Navigate, Link } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
 import { authenticate, isAuth } from "./helpers";
@@ -73,6 +73,8 @@ const Signin = ({router}) => {
                 {isAuth() ? <Navigate to="/" /> : null}
                 <h1 className="p-5 text-center">Signin</h1>
                 {signinForm()}
+                <br/>
+                <Link to="/auth/password/forgot" className="btn btn-sm btn-outline-danger">Forgot Password?</Link>
             </div>
         </Layout>
     )
