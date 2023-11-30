@@ -67,3 +67,12 @@ export const signout = (callback) => {
     removeLocalStorage('user')
     callback()
 }
+
+export const updateUser = (response, next) => { //middleware
+    if(window!==undefined){
+        let auth = JSON.parse(localStorage.getItem('user'))
+        auth = response.data
+        localStorage.setItem('user', JSON.stringify(auth))
+    }
+    next()
+}

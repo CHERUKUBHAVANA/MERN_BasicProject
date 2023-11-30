@@ -49,7 +49,7 @@ const Layout = ({ children, router }) => {
             {isAuth() && isAuth().role === "subscriber" && (
                 <li className='nav-item'>
                     <Link to="/private" className=' nav-link' style={isActive('/private')}>
-                        {isAuth().name.charAt(0).toUpperCase() + isAuth().name.slice(1)}
+                        {isAuth().name}
                     </Link>
                 </li>
             )}

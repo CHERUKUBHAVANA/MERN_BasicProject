@@ -124,7 +124,25 @@ exports.signin = (req, res) => {
     })
 }
 
-exports.requireSignin = expressjwt({ // so that only authorized/logged in user can see the profile
+exports.requireSignin = expressjwt({ //Middleware -  so that only authorized/logged in user can see the profile
     secret: process.env.JWT_SECRET,
     algorithms: ["HS256"], //makes data available in req.user
 })
+
+exports.adminMiddleware = (req, res, next) => {
+    console.log(req.auth)
+    User.findById({_id: req.auth._id}).exec((error, user)=>{
+        if(error || !user){
+            return res.status(400).json({
+                error: "User not found"
+            })
+        }
+        if(user.role!=="admin"){
+            return res.status(400).json({
+                error: "Admin resource access denied"
+            })
+        }
+        req.profile = user
+        next()
+    })
+}
