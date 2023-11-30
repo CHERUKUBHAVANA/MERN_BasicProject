@@ -25,7 +25,7 @@ mongoose.connect(process.env.DATABASE, {
 //import routes
 
 const authRoutes = require('./routes/auth')
-
+const userRoutes = require('./routes/user')
 //app middlewares - should be on the top of route middlewares
 
 app.use(morgan('dev')); //GET /api/signup 304 3.524 ms - -
@@ -38,6 +38,7 @@ if(process.env.NODE_ENV = 'development'){
 
 //middleware - between sending request and response processing
 app.use('/api', authRoutes)
+app.use('/api', userRoutes)
 
 const port = process.env.PORT || 8000
 

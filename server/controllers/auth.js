@@ -1,6 +1,7 @@
 
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
+const {expressjwt} = require("express-jwt");
 const elasticEmail = require('@elasticemail/elasticemail-client');
 
 exports.signup = (req, res) => {
@@ -122,3 +123,8 @@ exports.signin = (req, res) => {
         })
     })
 }
+
+exports.requireSignin = expressjwt({ // so that only authorized/logged in user can see the profile
+    secret: process.env.JWT_SECRET,
+    algorithms: ["HS256"], //makes data available in req.user
+})

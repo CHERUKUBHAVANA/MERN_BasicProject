@@ -41,7 +41,7 @@ const Layout = ({ children, router }) => {
             {isAuth() && isAuth().role === "admin" && (
                 <li className='nav-item'>
                     <Link to="/admin" className=' nav-link' style={isActive('/admin')}>
-                        {isAuth().name}
+                    {isAuth().name.charAt(0).toUpperCase() + isAuth().name.slice(1)}
                     </Link>
                 </li>
             )}
@@ -49,14 +49,14 @@ const Layout = ({ children, router }) => {
             {isAuth() && isAuth().role === "subscriber" && (
                 <li className='nav-item'>
                     <Link to="/private" className=' nav-link' style={isActive('/private')}>
-                        {isAuth().name}
+                        {isAuth().name.charAt(0).toUpperCase() + isAuth().name.slice(1)}
                     </Link>
                 </li>
             )}
 
             {isAuth() && (
                 <li className='nav-item'>
-                    <span className='nav-link text-light' style={{ cursor: 'pointer' }} onClick={() => {
+                    <span className='nav-link text-light' style={{ cursor: 'pointer'}} onClick={() => {
                         signout(() => {
                             navigate('/')
                         })
