@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const { expressjwt } = require("express-jwt");
 const _ = require('lodash')
 const elasticEmail = require('@elasticemail/elasticemail-client');
+const { OAuth2Client } = require('google-auth-library')
 
 exports.signup = (req, res) => {
     //console.log(req.body)
@@ -190,8 +191,8 @@ exports.forgotPassword = (req, res) => {
             },
         }
 
-        return user.updateOne({resetPasswordLink: token}, (err, success)=>{
-            if(err){
+        return user.updateOne({ resetPasswordLink: token }, (err, success) => {
+            if (err) {
                 return res.status(400).json({
                     err: 'Database Connection error on user forgot password request'
                 })
@@ -217,17 +218,17 @@ exports.forgotPassword = (req, res) => {
 }
 
 exports.resetPassword = (req, res) => {
-    const {resetPasswordLink, newPassword} = req.body
+    const { resetPasswordLink, newPassword } = req.body
 
-    if(resetPasswordLink){
-        jwt.verify(resetPasswordLink, process.env.JWT_RESET_PASSWORD, function(err, decoded){
-            if(err){
+    if (resetPasswordLink) {
+        jwt.verify(resetPasswordLink, process.env.JWT_RESET_PASSWORD, function (err, decoded) {
+            if (err) {
                 return res.status(400).json({
                     err: 'Expired link, try again!'
                 })
             }
-            User.findOne({resetPasswordLink}, (err, user)=>{
-                if(err || !user){
+            User.findOne({ resetPasswordLink }, (err, user) => {
+                if (err || !user) {
                     return res.status(400).json({
                         err: 'Something went wrong, try later!'
                     })
@@ -237,8 +238,8 @@ exports.resetPassword = (req, res) => {
                     resetPasswordLink: ''
                 }
                 user = _.extend(user, updatedFields)
-                user.save((err, result)=>{
-                    if(err){
+                user.save((err, result) => {
+                    if (err) {
                         return res.status(400).json({
                             err: 'Error resetting user password'
                         })
@@ -250,4 +251,44 @@ exports.resetPassword = (req, res) => {
             })
         })
     }
+}
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+
+exports.googleLogin = (req, res) => {
+    const { idToken } = req.body
+    client.verifyIdToken({ idToken, audience: process.env.GOOGLE_CLIENT_ID }).then(response => {
+        const { email_verified, name, email } = response.payload
+        if (email_verified) {
+            User.findOne({ email }).exec((err, user) => {
+                if (user) {
+                    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
+                    const { _id, email, name, role } = user
+                    return res.json({
+                        token, user: { _id, email, name, role }
+                    })
+                }
+                else {
+                    let password = email + process.env.JWT_SECRET
+                    user = new User({ name, email, password })
+                    user.save((err, data) => {
+                        if (err) {
+                            return res.status(400).json({
+                                error: 'User signup failed with google'
+                            })
+                        }
+                        const token = jwt.sign({ _id: data._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
+                        const { _id, email, name, role } = data
+                        return res.json({
+                            token, user: { _id, email, name, role }
+                        })
+                    })
+                }
+            })
+        }else{
+            return res.status(400).json({
+                error: 'Google login failed, try again!'
+            })
+        }
+    })
 }

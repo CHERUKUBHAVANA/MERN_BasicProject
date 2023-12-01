@@ -6,6 +6,8 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
 import { authenticate, isAuth } from "./helpers";
 import withRouter from "../core/WithRouter";
+import GoogleLoginOption from "./GoogleLoginOption";
+// import FacebookLoginOption from "./FacebookLoginOption";
 
 const Signin = ({router}) => {
     const {navigate} = router
@@ -19,6 +21,16 @@ const Signin = ({router}) => {
 
     const handleChange = (name) => (event) => {
         setValues({ ...values, [name]: event.target.value })
+    }
+
+    const informParent = response => {
+        authenticate(response, () => {
+            if (isAuth() && isAuth().role === "admin") {
+                navigate('/admin')
+            } else {
+                navigate('/private')
+            }
+        })
     }
 
     const clickSubmit = (event) => {
@@ -72,9 +84,11 @@ const Signin = ({router}) => {
                 <ToastContainer />
                 {isAuth() ? <Navigate to="/" /> : null}
                 <h1 className="p-5 text-center">Signin</h1>
+                <GoogleLoginOption informParent={informParent}/>
+                {/* <FacebookLoginOption informParent={informParent}/> */}
                 {signinForm()}
                 <br/>
-                <Link to="/auth/password/forgot" className="btn btn-sm btn-outline-danger">Forgot Password?</Link>
+                <Link to="/auth/password/forgot" className="btn btn-sm btn-outline-danger mr-0">Forgot Password?</Link>
             </div>
         </Layout>
     )
