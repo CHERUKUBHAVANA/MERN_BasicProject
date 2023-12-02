@@ -41,16 +41,16 @@ app.use(cors({origin: [`http://localhost:3000`, "https://mern-auth-app.onrender.
 app.use('/api', authRoutes)
 app.use('/api', userRoutes)
 
-if(process.env.NODE_ENV === 'production'){
-    app.use(express.static(path.join(__dirname,'/client/build')))
-    app.get(('*', (req, res)=>{
-        res.sendFile(path.resolve(__dirname,'client', 'build', 'index.html'))
-    }))
-}else{
-    app.get('/', (req,res)=>{
-        res.send('API is running')
-    })
-}
+// if(process.env.NODE_ENV === 'production'){
+//     app.use(express.static(path.join(__dirname,'/client/build')))
+//     app.get(('*', (req, res)=>{
+//         res.sendFile(path.resolve(__dirname,'client', 'build', 'index.html'))
+//     }))
+// }else{
+//     app.get('/', (req,res)=>{
+//         res.send('API is running')
+//     })
+// }
 
 const port = process.env.PORT || 8000
 
