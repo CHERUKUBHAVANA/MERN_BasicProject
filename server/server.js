@@ -32,7 +32,7 @@ const userRoutes = require('./routes/user')
 app.use(morgan('dev')); //GET /api/signup 304 3.524 ms - -
 app.use(bodyParser.json())
 // app.use(cors()); 
-app.use(cors({origin: [`http://localhost:3000`, "https://mern-auth-app.onrender.com"]}))
+app.use(cors({origin: [`http://localhost:3000`, "https://mernauthapi.onrender.com"]}))
 
 // to allow client/react side origin which runs on 3000 , as server is running on 8000
 
@@ -41,16 +41,16 @@ app.use(cors({origin: [`http://localhost:3000`, "https://mern-auth-app.onrender.
 app.use('/api', authRoutes)
 app.use('/api', userRoutes)
 
-// if(process.env.NODE_ENV === 'production'){
-//     app.use(express.static(path.join(__dirname,'/client/build')))
-//     app.get(('*', (req, res)=>{
-//         res.sendFile(path.resolve(__dirname,'client', 'build', 'index.html'))
-//     }))
-// }else{
-//     app.get('/', (req,res)=>{
-//         res.send('API is running')
-//     })
-// }
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static(path.join(__dirname,'/client/build')))
+    app.get(('*', (req, res)=>{
+        res.sendFile(path.resolve(__dirname,'client', 'build', 'index.html'))
+    }))
+}else{
+    app.get('/', (req,res)=>{
+        res.send('API is running')
+    })
+}
 
 const port = process.env.PORT || 8000
 
