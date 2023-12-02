@@ -72,17 +72,17 @@ exports.accountActivation = (req, res) => {
     if (token) {
         jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, function (err, decoded) {
             if (err) {
-                console.log('JWT VERIFY IN ACTIVATION ERROR', err)
+                // console.log('JWT VERIFY IN ACTIVATION ERROR', err)
                 return res.status(401).json({
                     error: 'Expired link! SignUp again'
                 })
             }
             const { name, email, password } = jwt.decode(token)
             const newUser = new User({ name, email, password })
-            console.log(newUser)
+            // console.log(newUser)
             newUser.save((err, user) => {
                 if (err) {
-                    console.log('SAVE USER IN ACTIVATION ACCOUNT ERROR', err)
+                    // console.log('SAVE USER IN ACTIVATION ACCOUNT ERROR', err)
                     return res.status(400).json({
                         error: 'Error saving user in database, Try signup again'
                     })
@@ -132,7 +132,7 @@ exports.requireSignin = expressjwt({ //Middleware -  so that only authorized/log
 })
 
 exports.adminMiddleware = (req, res, next) => {
-    console.log(req.auth)
+    // console.log(req.auth)
     User.findById({ _id: req.auth._id }).exec((error, user) => {
         if (error || !user) {
             return res.status(400).json({

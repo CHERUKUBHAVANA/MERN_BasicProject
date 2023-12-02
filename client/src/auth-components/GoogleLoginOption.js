@@ -29,7 +29,7 @@ const GoogleLoginOption = ({informParent}) => {
                     buttonText="Login"
                     onSuccess={responseGoogle}
                     onFailure={() => {
-                        console.log("Login failed")
+                        // console.log("Login failed")
                     }}
                     render={({ onClick, logout }) => (
                         <GoogleCustomComponent onClick={onClick} onLogoutClick={logout} />

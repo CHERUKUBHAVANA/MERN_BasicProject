@@ -5,7 +5,7 @@ import FacebookCustomComponent from '../core/FacebookCustomComponent'
 const FacebookLoginOption = ({ informParent }) => {
 
     const responseFacebook = response => {
-        console.log(response)
+        // console.log(response)
         // axios({
         //     method: 'POST',
         //     url: `${process.env.REACT_APP_API}/google-login`,
@@ -26,10 +26,10 @@ const FacebookLoginOption = ({ informParent }) => {
                 autoLoad={false}
                 onSuccess={responseFacebook}
                 onFail={(error) => {
-                    console.log('Login Failed!', error);
+                    // console.log('Login Failed!', error);
                 }}
                 onProfileSuccess={(response) => {
-                    console.log('Get Profile Success!', response);
+                    // console.log('Get Profile Success!', response);
                 }}
                 // render={({ onClick, logout }) => (
                 //     <FacebookCustomComponent onClick={responseFacebook} onLogoutClick={logout} />

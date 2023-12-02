@@ -15,7 +15,7 @@ exports.read = (req, res) => {
 }
 
 exports.update = (req, res) => {
-    console.log('UPDATE USER', req.auth, "UPDATE DATA", req.body)
+    // console.log('UPDATE USER', req.auth, "UPDATE DATA", req.body)
     const { name, password } = req.body;
     User.findOne({ _id: req.auth._id }, (err, user) => {
         if (err || !user) {

@@ -55,7 +55,7 @@ const Signin = ({router}) => {
                 })
             })
             .catch(error => {
-                console.log('SIGNUP ERROR', error.response.data)
+                // console.log('SIGNUP ERROR', error.response.data)
                 setValues({ ...values, buttonText: 'Submit' })
                 toast.error(error.response.data.error)
             })

@@ -62,14 +62,14 @@ const Private = ({ router }) => {
             data: { name, password }  //similar to body part in postman, i.e, allowing name and password to be changed
         })
             .then(response => {
-                console.log('SIGNUP SUCCESS', response)
+                // console.log('SIGNUP SUCCESS', response)
                 updateUser(response, () => {
                     setValues({ ...values, buttonText: 'Submitted' })
                     toast.success("Profile updated successfully")
                 })
             })
             .catch(error => {
-                console.log('PROFILE UPDATE ERROR', error.response.data)
+                // console.log('PROFILE UPDATE ERROR', error.response.data)
                 setValues({ ...values, buttonText: 'Submit' })
                 toast.error(error.response.data.error)
             })
